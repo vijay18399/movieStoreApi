@@ -7,5 +7,5 @@ var storage = multer.diskStorage({
     cb(null, `${Date.now()}-result-${file.originalname}`);
   },
 });
-var uploadFile = multer({ storage: storage });
-module.exports = uploadFile;
+var upload = multer({ storage: storage });
+module.exports = upload;

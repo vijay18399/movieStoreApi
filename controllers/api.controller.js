@@ -1,4 +1,5 @@
-const Movie = require("../models/movie.model");
+const db = require("../models");
+const Movie = db.movie;
 
 exports.create = (req, res, next) => {
   if (!req.body) {
@@ -122,6 +123,40 @@ exports.delete = (req, res, next) => {
       }
       return res.status(500).send({
         message: "Could not delete movie with id " + req.params.movieId,
+      });
+    });
+};
+exports.search = (req, res, next) => {
+  const re = new RegExp(req.params.key, "i");
+  const currentPage = req.query.page || 1;
+  const perPage = 12;
+  let totalItems;
+  Movie.find({
+    $or: [
+      { title: { $regex: req.params.key, $options: "i" } },
+      { actors: { $in: [re] } },
+      { directors: { $in: [re] } },
+    ],
+  })
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Movie.find({
+        $or: [
+          { title: { $regex: req.params.key, $options: "i" } },
+          { actors: { $in: [re] } },
+          { directors: { $in: [re] } },
+        ],
+      })
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
+    .then((movies) => {
+      res.status(200).json({ movies: movies, totalItems: totalItems });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Movies.",
       });
     });
 };
