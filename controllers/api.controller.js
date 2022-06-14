@@ -44,20 +44,21 @@ exports.create = (req, res, next) => {
 exports.findAll = (req, res, next) => {
   const perPage = req.query.perPage || 12;
   const currentPage = req.query.page || 1;
-  const sort = req.query.sort || 0;
+  const sortBy = req.query.sortBy || 0;
+  const asc = req.query.asc || 1;
   sortby = {};
-  if (sort == "title") {
-    sortby = { sort: { title: 1 } };
+  if (sortBy == "title") {
+    sortby = { sort: { title: asc } };
   }
-  if (sort == "year") {
-    sortby = { sort: { year: 1 } };
+  if (sortBy == "year") {
+    sortby = { sort: { year: asc } };
   }
   let totalItems;
   Movie.find()
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Movie.find({}, null, sortbyname)
+      return Movie.find({}, null, sortby)
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
