@@ -42,14 +42,22 @@ exports.create = (req, res, next) => {
     });
 };
 exports.findAll = (req, res, next) => {
+  const perPage = req.query.perPage || 12;
   const currentPage = req.query.page || 1;
-  const perPage = 12;
+  const sort = req.query.sort || 0;
+  sortby = {};
+  if (sort == "title") {
+    sortby = { sort: { title: 1 } };
+  }
+  if (sort == "year") {
+    sortby = { sort: { year: 1 } };
+  }
   let totalItems;
   Movie.find()
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Movie.find()
+      return Movie.find({}, null, sortbyname)
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })

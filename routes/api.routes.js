@@ -6,7 +6,7 @@ const { authJwt } = require("../middlewares");
 //Only admin can Create a new Movie
 router.post(
   "/movies",
-  [authJwt.verifyToken, authJwt.isAdmin],
+  [authJwt.verifyToken, authJwt.isModerator],
   upload.single("poster"),
   apiController.create
 );
@@ -20,7 +20,7 @@ router.get("/movies/:movieId", apiController.findOne);
 //Either Admin or Moderator can Update Movie with movieId
 router.put(
   "/movies/:movieId",
-  [authJwt.verifyToken, authJwt.isModeratorOrAdmin],
+  [authJwt.verifyToken, authJwt.isModerator],
   apiController.update
 );
 
