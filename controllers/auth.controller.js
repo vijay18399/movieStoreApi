@@ -75,10 +75,10 @@ exports.signin = (req, res) => {
           message: "Invalid Password!",
         });
       }
-     let token = jwt.sign({ id: user.id }, config.secret, {
+      let token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: config.jwtExpiration,
       });
-       let refreshToken = await RefreshToken.createToken(user);
+      let refreshToken = RefreshToken.createToken(user);
       var authorities = [];
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
@@ -86,6 +86,7 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
+        refreshToken: refreshToken,
         email: user.email,
         roles: authorities,
         accessToken: token,
@@ -104,16 +105,22 @@ exports.refreshToken = async (req, res) => {
       return;
     }
     if (RefreshToken.verifyExpiration(refreshToken)) {
-      RefreshToken.findByIdAndRemove(refreshToken._id, { useFindAndModify: false }).exec();
-      
+      RefreshToken.findByIdAndRemove(refreshToken._id, {
+        useFindAndModify: false,
+      }).exec();
+
       res.status(403).json({
         message: "Refresh token was expired. Please make a new signin request",
       });
       return;
     }
-    let newAccessToken = jwt.sign({ id: refreshToken.user._id }, config.secret, {
-      expiresIn: config.jwtExpiration,
-    });
+    let newAccessToken = jwt.sign(
+      { id: refreshToken.user._id },
+      config.secret,
+      {
+        expiresIn: config.jwtExpiration,
+      }
+    );
     return res.status(200).json({
       accessToken: newAccessToken,
       refreshToken: refreshToken.token,
