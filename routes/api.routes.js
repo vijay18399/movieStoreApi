@@ -33,4 +33,12 @@ router.delete(
 // Search all movies
 router.get("/search/:key", apiController.search);
 
+// Retrieve all genres
+router.get("/genres", apiController.getGenres);
+// Retrieve all actors
+router.get("/actors", apiController.getActors);
+// Retrieve all directors
+router.get("/directors", apiController.getDirectors);
+// Retrieve all actors or directors
+router.get("/recommendations", apiController.getRecommend);
 module.exports = router;

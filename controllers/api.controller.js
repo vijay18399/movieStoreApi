@@ -164,3 +164,61 @@ exports.search = (req, res, next) => {
       });
     });
 };
+exports.getGenres = (req, res, next) => {
+  const key = req.query.key || "";
+  Movie.distinct("genres", { type: 1, genres: { $regex: key, $options: "i" } })
+    .then((genres) => {
+      res.status(200).json({ genres: genres });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Genres.",
+      });
+    });
+};
+exports.getActors = (req, res, next) => {
+  const key = req.query.key || "";
+  Movie.distinct("actors", {
+    type: 1,
+    actors: { $regex: key, $options: "i" },
+  })
+    .then((actors) => {
+      res.status(200).json({ actors: actors });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Actors.",
+      });
+    });
+};
+exports.getDirectors = (req, res, next) => {
+  const key = req.query.key || "";
+  Movie.distinct("directors", {
+    type: 1,
+    directors: { $regex: key, $options: "i" },
+  })
+    .then((directors) => {
+      res.status(200).json({ directors: directors });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Directors.",
+      });
+    });
+};
+exports.getRecommend = (req, res, next) => {
+  const key = req.query.key || "";
+  let actors = Movie.distinct("actors", {
+    type: 1,
+    actors: { $regex: key, $options: "i" },
+  });
+  let directors = Movie.distinct("directors", {
+    type: 1,
+    directors: { $regex: key, $options: "i" },
+  });
+  Promise.all([actors, directors]).then((values) => {
+    let recommendations = values[0].concat(values[1]);
+    res.status(200).json({ recommendations: recommendations });
+  });
+};
