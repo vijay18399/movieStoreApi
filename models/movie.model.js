@@ -8,7 +8,7 @@ const MovieSchema = mongoose.Schema({
   audience_rating: Number,
   runtime: Number,
   rating: Number,
-  votes: votes,
+  votes: Number,
   plot: String,
   lq_poster: String,
   poster: String,
