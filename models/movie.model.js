@@ -2,20 +2,19 @@ const mongoose = require("mongoose");
 const MovieSchema = mongoose.Schema({
   _id: String,
   name: String,
-  poster: String,
-  lq_poster: String,
+  year: Number,
+  genres: [String],
   link: String,
+  audience_rating: Number,
   runtime: Number,
   rating: Number,
-  votes: Number,
+  votes: votes,
   plot: String,
-  audience_rating: String,
-  genres: [String],
+  lq_poster: String,
+  poster: String,
   actors: [String],
   directors: [String],
-  releaseDate: Date,
-  year: Number,
-  languges: [String],
+  languages: [String],
 });
 
 module.exports = mongoose.models.Movie || mongoose.model("Movie", MovieSchema);

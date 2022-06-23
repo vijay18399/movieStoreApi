@@ -8,16 +8,10 @@ exports.create = (req, res, next) => {
     });
   }
 
-  if (!req.file) {
-    poster = req.body.poster;
-  } else {
-    poster = "./public/" + req.file.poster;
-  }
-
   movie = new Movie({
     _id: req.body._id,
     name: req.body.name,
-    poster: poster,
+    poster: req.body.poster,
     lq_poster: req.body.lq_poster,
     link: req.body.link,
     runtime: req.body.runtime,
@@ -28,7 +22,6 @@ exports.create = (req, res, next) => {
     genres: req.body.genres,
     actors: req.body.actors,
     directors: req.body.directors,
-    releaseDate: req.body.releaseDate,
     year: req.body.year,
     languges: req.body.languges,
   });

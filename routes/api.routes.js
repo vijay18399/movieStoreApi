@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const apiController = require("../controllers/api.controller");
-const { upload } = require("../middlewares");
+
 const { authJwt } = require("../middlewares");
 //Only admin can Create a new Movie
 router.post(
   "/movies",
   [authJwt.verifyToken, authJwt.isModerator],
-  upload.single("poster"),
   apiController.create
 );
 
