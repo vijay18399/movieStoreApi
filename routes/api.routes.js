@@ -32,7 +32,8 @@ router.delete(
 
 // Search all movies
 router.get("/search/:key", apiController.search);
-
+// filter movies
+router.post("/filter", apiController.filter);
 // Retrieve all genres
 router.get("/genres", apiController.getGenres);
 // Retrieve all actors

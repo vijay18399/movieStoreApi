@@ -42,18 +42,56 @@ exports.findAll = (req, res, next) => {
   const sortBy = req.query.sortBy || 0;
   const asc = req.query.asc || 1;
   sortby = {};
+  if (sortBy == "name") {
+    sortby = { sort: { name: asc } };
+  }
+  if (sortBy == "year") {
+    sortby = { sort: { year: asc } };
+  }
+  let totalItems;
+  Movie.find({ year: { $ne: 0 } }, null, sortby)
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Movie.find({ year: { $ne: 0 } }, null, sortby)
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
+    .then((movies) => {
+      res.status(200).json({ movies: movies, totalItems: totalItems });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Movies.",
+      });
+    });
+};
+exports.filter = (req, res, next) => {
+  const perPage = req.query.perPage || 12;
+  const currentPage = req.query.page || 1;
+  const sortBy = req.query.sortBy || 0;
+  const asc = req.query.asc || 1;
+  sortby = {};
   if (sortBy == "title") {
     sortby = { sort: { title: asc } };
   }
   if (sortBy == "year") {
     sortby = { sort: { year: asc } };
   }
+  let query = {
+    $or: [
+      { genres: { $in: req.body.genres } },
+      { actors: { $in: req.body.actors } },
+      { directors: { $in: req.body.directors } },
+      { languages: { $in: req.body.languages } },
+    ],
+  };
   let totalItems;
-  Movie.find()
+  Movie.find(query, null, sortby)
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Movie.find({}, null, sortby)
+      return Movie.find(query, null, sortby)
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
