@@ -72,8 +72,8 @@ exports.filter = (req, res, next) => {
   const sortBy = req.query.sortBy || 0;
   const asc = req.query.asc || 1;
   sortby = {};
-  if (sortBy == "title") {
-    sortby = { sort: { title: asc } };
+  if (sortBy == "name") {
+    sortby = { sort: { name: asc } };
   }
   if (sortBy == "year") {
     sortby = { sort: { year: asc } };
