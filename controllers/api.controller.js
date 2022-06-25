@@ -79,10 +79,8 @@ exports.filter = (req, res, next) => {
     sortby = { sort: { year: asc } };
   }
   let query = {
-    $or: [
+    $and: [
       { genres: { $in: req.body.genres } },
-      { actors: { $in: req.body.actors } },
-      { directors: { $in: req.body.directors } },
       { languages: { $in: req.body.languages } },
     ],
   };
