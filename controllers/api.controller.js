@@ -258,3 +258,16 @@ exports.getRecommend = (req, res, next) => {
     res.status(200).json({ recommendations: recommendations });
   });
 };
+exports.getMovieCount = (req, res) => {
+  Movie.find()
+    .countDocuments()
+    .then((count) => {
+      res.status(200).json({ movie_count: count });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Movies Count.",
+      });
+    });
+};

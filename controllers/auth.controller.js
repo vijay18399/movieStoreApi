@@ -129,3 +129,52 @@ exports.refreshToken = async (req, res) => {
     return res.status(500).send({ message: err });
   }
 };
+exports.update = (req, res) => {
+  User.findOne({
+    username: req.body.username,
+  }).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
+    }
+    if (user) {
+      if (req.body.roles) {
+        Role.find(
+          {
+            name: { $in: req.body.roles },
+          },
+          (err, roles) => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
+            user.roles = roles.map((role) => role._id);
+            user.save((err) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+              res.send({ message: "User roles updated successfully!" });
+            });
+          }
+        );
+      }
+    }
+  });
+};
+exports.getUserCount = (req, res) => {
+  User.find()
+    .countDocuments()
+    .then((count) => {
+      res.status(200).json({ user_count: count });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Users Count.",
+      });
+    });
+};

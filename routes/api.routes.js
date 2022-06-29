@@ -42,4 +42,7 @@ router.get("/actors", apiController.getActors);
 router.get("/directors", apiController.getDirectors);
 // Retrieve all actors or directors
 router.get("/recommendations", apiController.getRecommend);
+// get movies count
+router.post("/movie-count", apiController.getMovieCount);
+
 module.exports = router;
