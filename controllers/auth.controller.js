@@ -165,6 +165,27 @@ exports.update = (req, res) => {
     }
   });
 };
+exports.getUsers = (req, res) => {
+  const perPage = req.query.perPage || 10;
+  const currentPage = req.query.page || 1;
+  let totalItems;
+  User.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return User.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
+    .then((users) => {
+      res.status(200).json({ users: users, totalItems: totalItems });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Users.",
+      });
+    });
+};
 exports.getUserCount = (req, res) => {
   User.find()
     .countDocuments()
