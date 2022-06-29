@@ -45,16 +45,12 @@ exports.signin = (req, res) => {
         expiresIn: config.jwtExpiration,
       });
       let refreshToken = RefreshToken.createToken(user);
-      var authorities = [];
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].toUpperCase());
-      }
       res.status(200).send({
         id: user._id,
         username: user.username,
         refreshToken: refreshToken,
         email: user.email,
-        roles: authorities,
+        roles: user.roles,
         accessToken: token,
       });
     });
