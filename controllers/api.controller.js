@@ -42,6 +42,7 @@ exports.findAll = (req, res, next) => {
   const sortBy = req.query.sortBy || 0;
   const asc = req.query.asc || 1;
   const noYear = req.query.noYear || 1;
+  console.log(req.query);
   var filter = {};
   if (noYear) {
     filter = { year: { $ne: 0 } };
@@ -53,6 +54,7 @@ exports.findAll = (req, res, next) => {
   if (sortBy == "year") {
     sortby = { sort: { year: asc } };
   }
+  console.log(filter);
   let totalItems;
   Movie.find(filter, null, sortby)
     .countDocuments()

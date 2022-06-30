@@ -30,25 +30,19 @@ isAdmin = (req, res, next) => {
       res.status(500).send({ message: err });
       return;
     }
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "admin") {
-            next();
-            return;
-          }
-        }
-        res.status(403).send({ message: "Require Admin Role!" });
+    if (!user) {
+      return res.status(403).send({ message: "User Not found." });
+    }
+    if (user) {
+      console.log(user);
+      if (user.roles.includes("admin")) {
+        next();
+        return;
+      } else {
+        res.status(500).send({ message: err });
         return;
       }
-    );
+    }
   });
 };
 isModerator = (req, res, next) => {
@@ -57,25 +51,18 @@ isModerator = (req, res, next) => {
       res.status(500).send({ message: err });
       return;
     }
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "moderator") {
-            next();
-            return;
-          }
-        }
-        res.status(403).send({ message: "Require Moderator Role!" });
+    if (!user) {
+      return res.status(403).send({ message: "User Not found." });
+    }
+    if (user) {
+      if (user.roles.includes("moderator")) {
+        next();
+        return;
+      } else {
+        res.status(500).send({ message: err });
         return;
       }
-    );
+    }
   });
 };
 
