@@ -174,27 +174,27 @@ exports.delete = (req, res, next) => {
     });
 };
 exports.search = (req, res, next) => {
+  console.log(req.params);
+  console.log(req.query);
   const re = new RegExp(req.params.key, "i");
   const currentPage = req.query.page || 1;
-  const perPage = 12;
+  const perPage = req.query.perPage || 12;
+  const searchFor = req.query.searchFor || "name";
+  let filter = {};
   let totalItems;
-  Movie.find({
-    $or: [
-      { title: { $regex: req.params.key, $options: "i" } },
-      { actors: { $in: [re] } },
-      { directors: { $in: [re] } },
-    ],
-  })
+  if (searchFor == "name") {
+    filter = { name: { $regex: req.params.key, $options: "i" } };
+  } else if (searchFor == "actors") {
+    filter = { actors: { $in: [re] } };
+  } else {
+    filter = { directors: { $in: [re] } };
+  }
+  console.log(filter);
+  Movie.find(filter)
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Movie.find({
-        $or: [
-          { title: { $regex: req.params.key, $options: "i" } },
-          { actors: { $in: [re] } },
-          { directors: { $in: [re] } },
-        ],
-      })
+      return Movie.find(filter)
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
