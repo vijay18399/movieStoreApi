@@ -41,6 +41,11 @@ exports.findAll = (req, res, next) => {
   const currentPage = req.query.page || 1;
   const sortBy = req.query.sortBy || 0;
   const asc = req.query.asc || 1;
+  const noYear = req.query.noYear || 1;
+  var filter = {};
+  if (noYear) {
+    filter = { year: { $ne: 0 } };
+  }
   sortby = {};
   if (sortBy == "name") {
     sortby = { sort: { name: asc } };
@@ -49,11 +54,11 @@ exports.findAll = (req, res, next) => {
     sortby = { sort: { year: asc } };
   }
   let totalItems;
-  Movie.find({ year: { $ne: 0 } }, null, sortby)
+  Movie.find(filter, null, sortby)
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Movie.find({ year: { $ne: 0 } }, null, sortby)
+      return Movie.find(filter, null, sortby)
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
