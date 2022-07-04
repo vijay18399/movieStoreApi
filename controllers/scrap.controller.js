@@ -45,11 +45,16 @@ exports.scrap = (req, res, next) => {
           poster = "";
         }
       }
-
+      let runtime = $(".sc-8c396aa2-0 > li:nth-child(3)").text();
+      if (runtime) {
+        runtime = runtime.split("h");
+        runtime[1] = runtime[1].split("m")[0];
+        runtime = Number(runtime[0]) * 60 + Number(runtime[1]);
+      }
       const movie = {
         lq_poster: $(".ipc-media--poster-l > img:nth-child(1)").attr("src"),
         poster: poster,
-        runtime: $(".sc-8c396aa2-0 > li:nth-child(3)").text(),
+        runtime: runtime,
         audience_rating: $(
           ".sc-8c396aa2-0 > li:nth-child(2) > span:nth-child(2)"
         ).text(),
