@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", routes.api);
 app.use("/auth", routes.auth);
-
+app.use("/web", routes.scrap);
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
