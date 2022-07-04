@@ -5,7 +5,7 @@ const MovieSchema = mongoose.Schema({
   year: Number,
   genres: [String],
   link: String,
-  audience_rating: Number,
+  audience_rating: String,
   runtime: Number,
   rating: Number,
   votes: Number,

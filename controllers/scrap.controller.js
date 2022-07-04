@@ -52,6 +52,8 @@ exports.scrap = (req, res, next) => {
         runtime = Number(runtime[0]) * 60 + Number(runtime[1]);
       }
       const movie = {
+        _id: _id,
+        link: url,
         lq_poster: $(".ipc-media--poster-l > img:nth-child(1)").attr("src"),
         poster: poster,
         runtime: runtime,
@@ -67,6 +69,7 @@ exports.scrap = (req, res, next) => {
         rating: $(
           ".sc-910a7330-12 > div:nth-child(1) > div:nth-child(1) > a:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > span:nth-child(1)"
         ).text(),
+        languages: [],
       };
       res.status(200).json(movie);
     }
